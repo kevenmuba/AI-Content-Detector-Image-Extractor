@@ -22,7 +22,7 @@ const steps = [
 
 export default function HowItWorks() {
     return (
-        <section className="py-20 lg:py-32 bg-[#fafafa]">
+        <section id="how-it-works" className="py-20 lg:py-32 bg-[#fafafa]">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="grid gap-12 lg:grid-cols-2 items-center">
                     <div>

@@ -5,7 +5,7 @@ import { Send, Users } from "lucide-react";
 
 export default function CTA() {
     return (
-        <section className="py-20 lg:py-32">
+        <section id="contact" className="py-20 lg:py-32">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="relative rounded-3xl bg-[#1e1e2e] py-16 px-6 md:px-16 overflow-hidden">
                     <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#fe6b46] opacity-10 blur-[100px] rounded-full pointer-events-none" />

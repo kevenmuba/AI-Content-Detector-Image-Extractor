@@ -36,10 +36,10 @@ export default function Navbar() {
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
-                    <Link href="#" className="hover:text-[#fe6b46] transition-colors">Products</Link>
-                    <Link href="#" className="hover:text-[#fe6b46] transition-colors">How it Works</Link>
-                    <Link href="#" className="hover:text-[#fe6b46] transition-colors">Resources</Link>
-                    <Link href="#" className="hover:text-[#fe6b46] transition-colors">Company</Link>
+                    <Link href="/#features" className="hover:text-[#fe6b46] transition-colors">Products</Link>
+                    <Link href="/#how-it-works" className="hover:text-[#fe6b46] transition-colors">How it Works</Link>
+                    <Link href="/#contact" className="hover:text-[#fe6b46] transition-colors">Contact</Link>
+                    <Link href="http://mubarek-beta.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-[#fe6b46] transition-colors">About</Link>
                 </div>
 
                 <div className="hidden md:flex items-center gap-4">
@@ -71,10 +71,10 @@ export default function Navbar() {
                         className="md:hidden border-t border-gray-100 bg-white"
                     >
                         <div className="flex flex-col gap-4 p-4 text-sm font-medium text-gray-600">
-                            <Link href="#" className="hover:text-[#fe6b46] transition-colors">Products</Link>
-                            <Link href="#" className="hover:text-[#fe6b46] transition-colors">How it Works</Link>
-                            <Link href="#" className="hover:text-[#fe6b46] transition-colors">Resources</Link>
-                            <Link href="#" className="hover:text-[#fe6b46] transition-colors">Company</Link>
+                            <Link href="/#features" className="hover:text-[#fe6b46] transition-colors" onClick={() => setIsOpen(false)}>Products</Link>
+                            <Link href="/#how-it-works" className="hover:text-[#fe6b46] transition-colors" onClick={() => setIsOpen(false)}>How it Works</Link>
+                            <Link href="/#contact" className="hover:text-[#fe6b46] transition-colors" onClick={() => setIsOpen(false)}>Contact</Link>
+                            <Link href="http://mubarek-beta.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-[#fe6b46] transition-colors" onClick={() => setIsOpen(false)}>About</Link>
                             <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
                                 <Button variant="ghost" size="icon" className="text-gray-600">
                                     <Moon className="h-5 w-5" />
