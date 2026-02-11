@@ -1,9 +1,16 @@
 services:
   web:
     container_name: nextdetect-ai
+    restart: always
     build: .
     ports:
       - "3000:3000"
+      - "49153:49153"        # optional, HMR websocket
     environment:
       - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true  # file polling
+      - CHOKIDAR_INTERVAL=100     # optional: check every 100ms
     command: npm run dev
+    volumes:
+      - .:/app
+      - /app/node_modules

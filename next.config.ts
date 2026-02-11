@@ -1,9 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
-  // output: 'standalone',
+  // @ts-ignore: Webpack dev middleware polling is not in type NextConfig
+  webpackDevMiddleware: (config) => {
+    config.watchOptions = {
+      poll: 800,
+      aggregateTimeout: 300,
+    };
+    return config;
+  },
 };
 
 export default nextConfig;
