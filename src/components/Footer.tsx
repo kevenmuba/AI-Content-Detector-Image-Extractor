@@ -1,4 +1,3 @@
-import { Facebook, Twitter, Linkedin, Github } from "lucide-react";
 import Link from "next/link";
 
 export default function Footer() {
@@ -39,57 +38,24 @@ export default function Footer() {
                     <div className="space-y-4">
                         <h4 className="font-bold text-[#1e1e2e]">Product</h4>
                         <ul className="space-y-2 text-sm text-gray-500">
-                            <li><Link href="#" className="hover:text-[#fe6b46] transition-colors">Text Detector</Link></li>
-                            <li><Link href="#" className="hover:text-[#fe6b46] transition-colors">Image Extractor</Link></li>
-                            <li><Link href="#" className="hover:text-[#fe6b46] transition-colors">API Reference</Link></li>
-                            <li><Link href="#" className="hover:text-[#fe6b46] transition-colors">Pricing</Link></li>
+                            <li><Link href="/ai-text-detector" className="hover:text-[#fe6b46] transition-colors">Text Detector</Link></li>
+                            <li><Link href="/image-extractor" className="hover:text-[#fe6b46] transition-colors">Image Extractor</Link></li>
                         </ul>
                     </div>
 
-                    <div className="space-y-4">
-                        <h4 className="font-bold text-[#1e1e2e]">Resources</h4>
-                        <ul className="space-y-2 text-sm text-gray-500">
-                            <li><Link href="#" className="hover:text-[#fe6b46] transition-colors">Blog</Link></li>
-                            <li><Link href="#" className="hover:text-[#fe6b46] transition-colors">Documentation</Link></li>
-                            <li><Link href="#" className="hover:text-[#fe6b46] transition-colors">Case Studies</Link></li>
-                            <li><Link href="#" className="hover:text-[#fe6b46] transition-colors">Whitepapers</Link></li>
-                        </ul>
-                    </div>
+
 
                     <div className="space-y-4">
                         <h4 className="font-bold text-[#1e1e2e]">Company</h4>
                         <ul className="space-y-2 text-sm text-gray-500">
-                            <li><Link href="#" className="hover:text-[#fe6b46] transition-colors">About Us</Link></li>
-                            <li><Link href="#" className="hover:text-[#fe6b46] transition-colors">Careers</Link></li>
-                            <li><Link href="#" className="hover:text-[#fe6b46] transition-colors">Contact</Link></li>
-                            <li><Link href="#" className="hover:text-[#fe6b46] transition-colors">Privacy</Link></li>
+                            <li><Link href="http://mubarek-beta.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-[#fe6b46] transition-colors">About Us</Link></li>
+                            <li><Link href="/#contact" className="hover:text-[#fe6b46] transition-colors">Contact</Link></li>
                         </ul>
                     </div>
 
-                    {/* Social Columns (Using existing grid from design) */}
-                    <div className="space-y-4 lg:col-span-1 lg:hidden"> {/* Hide on large screens as per visual layout? No, keep separate */}
-                        <h4 className="font-bold text-[#1e1e2e]">Social</h4>
-                        <div className="flex gap-4">
-                            <Link href="#" className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#fe6b46] hover:text-white transition-all">
-                                <Twitter className="h-4 w-4" />
-                            </Link>
-                            <Link href="#" className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#fe6b46] hover:text-white transition-all">
-                                <Linkedin className="h-4 w-4" />
-                            </Link>
-                            <Link href="#" className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#fe6b46] hover:text-white transition-all">
-                                <Github className="h-4 w-4" />
-                            </Link>
-                        </div>
-                    </div>
+
                 </div>
-                <div className="mt-12 pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400">
-                    <div className="hidden lg:block">{/* Spacer or secondary copyright */}</div>
-                    <div className="flex gap-8">
-                        <Link href="#" className="hover:text-[#fe6b46]">Terms of Service</Link>
-                        <Link href="#" className="hover:text-[#fe6b46]">Privacy Policy</Link>
-                        <Link href="#" className="hover:text-[#fe6b46]">Cookie Settings</Link>
-                    </div>
-                </div>
+
             </div>
         </footer>
     );

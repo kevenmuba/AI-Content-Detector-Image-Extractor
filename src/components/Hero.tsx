@@ -27,11 +27,15 @@ export default function Hero() {
                             </p>
                         </div>
                         <div className="flex flex-col gap-4 sm:flex-row">
-                            <Button variant="orange" size="lg" className="rounded-full px-8 gap-2">
-                                Request a Demo <ArrowRight className="h-4 w-4" />
+                            <Button variant="orange" size="lg" className="rounded-full px-8 gap-2" asChild>
+                                <a href="https://github.com/kevenmuba/AI-Content-Detector-Image-Extractor.git" target="_blank" rel="noopener noreferrer">
+                                    See Project Source Code <ArrowRight className="h-4 w-4" />
+                                </a>
                             </Button>
-                            <Button variant="dark" size="lg" className="rounded-full px-8 gap-2">
-                                <PlayCircle className="h-4 w-4" /> Watch Video
+                            <Button variant="dark" size="lg" className="rounded-full px-8 gap-2" asChild>
+                                <a href="https://mubarek-beta.vercel.app/" target="_blank" rel="noopener noreferrer">
+                                    <PlayCircle className="h-4 w-4" /> Contact the Developer
+                                </a>
                             </Button>
                         </div>
                     </motion.div>

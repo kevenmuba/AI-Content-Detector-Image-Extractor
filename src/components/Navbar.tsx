@@ -43,10 +43,10 @@ export default function Navbar() {
                 </div>
 
                 <div className="hidden md:flex items-center gap-4">
-                    <Button variant="ghost" size="icon" className="text-gray-600">
+                    {/* <Button variant="ghost" size="icon" className="text-gray-600">
                         <Moon className="h-5 w-5" />
                         <span className="sr-only">Toggle theme</span>
-                    </Button>
+                    </Button> */}
                     <Button variant="orange" className="rounded-full px-6">
                         Sign In
                     </Button>
