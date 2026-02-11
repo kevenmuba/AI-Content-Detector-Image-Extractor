@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, PlayCircle, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
+
 export default function Hero() {
     return (
         <section className="relative overflow-hidden bg-[#fafafa] py-20 lg:py-32">
@@ -39,54 +40,42 @@ export default function Hero() {
                             </Button>
                         </div>
                     </motion.div>
+
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
                         className="relative mx-auto w-full max-w-[500px] lg:max-w-none"
                     >
-                        <div className="relative rounded-2xl bg-[#4d9e87] p-8 shadow-2xl aspect-square flex items-center justify-center">
-                            <div className="relative z-10 w-full h-full border border-white/20 rounded-xl p-6 flex flex-col justify-between">
-                                <div className="self-end bg-[#fe6b46] text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                                    2.5M+ <br /> <span className="font-normal opacity-90">Documents scanned monthly</span>
-                                </div>
-
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
-
-                                <div className="relative mt-auto">
-                                    <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 border border-white/20 text-white">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <div className="w-8 h-8 rounded bg-white/20 flex items-center justify-center">
-                                                <span className="font-bold">AI</span>
-                                            </div>
-                                            <span className="font-medium">Analysis Complete</span>
-                                        </div>
-                                        <div className="h-2 w-full bg-white/20 rounded-full overflow-hidden">
-                                            <div className="h-full bg-[#fe6b46] w-[98%]" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-square border border-white/20 group">
+                            <img
+                                src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1965&auto=format&fit=crop"
+                                alt="AI Analysis"
+                                className="object-cover w-full h-full transform transition-transform duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#1e1e2e]/80 via-transparent to-transparent" />
 
                             {/* Floating Badge */}
                             <motion.div
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.5 }}
-                                className="absolute -left-8 bottom-20 bg-white p-4 rounded-xl shadow-xl flex items-center gap-4 max-w-[200px]"
+                                className="absolute -left-6 bottom-12 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl flex items-center gap-4 max-w-[240px] border border-white/50"
                             >
-                                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
-                                    <CheckCircle className="h-6 w-6" />
+                                <div className="relative h-12 w-12 flex items-center justify-center rounded-xl bg-gradient-to-br from-green-100 to-green-50 shadow-inner">
+                                    <div className="absolute inset-0 bg-green-500/20 blur-lg rounded-full" />
+                                    <CheckCircle className="h-6 w-6 text-green-600 relative z-10" />
                                 </div>
                                 <div>
-                                    <p className="font-bold text-[#1e1e2e]">99.8% Accuracy</p>
-                                    <p className="text-xs text-gray-500 mt-1">Our detection engine identifies AI signatures with industry-leading precision.</p>
+                                    <p className="font-bold text-[#1e1e2e] text-lg">99.8%</p>
+                                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Accuracy</p>
                                 </div>
+
                             </motion.div>
                         </div>
                     </motion.div>
                 </div>
             </div>
-        </section>
+        </section >
     );
 }
