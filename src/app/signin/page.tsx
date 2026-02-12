@@ -32,7 +32,7 @@ export default function SignInPage() {
             if (result.status === "complete") {
                 // Activate the session
                 await setActive({ session: result.createdSessionId })
-                router.push("/") // Redirect after successful login
+                router.push("/ai-text-detector") // Redirect after successful login
             } else {
                 // If multi-factor or email verification required
                 alert("Additional verification required. Check your email or follow MFA steps.")
@@ -47,7 +47,12 @@ export default function SignInPage() {
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
             <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg">
-                <h1 className="">Login First before using our ai</h1>
+                <h1 className="text-2xl font-bold text-gray-900 text-center">
+  Sign in to continue
+</h1>
+<p className="text-sm text-gray-600 text-center mt-1">
+  Please log in to access our AI tools
+</p>
 
                 <form className="mt-8 space-y-6" onSubmit={handleSignIn}>
                     <div className="space-y-4">
