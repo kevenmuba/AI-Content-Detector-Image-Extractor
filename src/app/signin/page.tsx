@@ -2,105 +2,107 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
+import { useSignIn, SignInButton } from "@clerk/nextjs"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
 
 export default function SignInPage() {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const { isLoaded, signIn, setActive } = useSignIn()
+    const router = useRouter()
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword)
+    const togglePasswordVisibility = () => setShowPassword(!showPassword)
+
+    const handleSignIn = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!isLoaded || !signIn) return
+
+        setLoading(true)
+        try {
+            // Attempt to sign in
+            const result = await signIn.create({ identifier: email, password })
+
+            if (result.status === "complete") {
+                // Activate the session
+                await setActive({ session: result.createdSessionId })
+                router.push("/") // Redirect after successful login
+            } else {
+                // If multi-factor or email verification required
+                alert("Additional verification required. Check your email or follow MFA steps.")
+            }
+        } catch (err: any) {
+            alert(err.message)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
             <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg">
-                <div className="text-center">
-                    <p className="mt-2 text-sm text-gray-600">
-                        Don&apos;t have an account?{" "}
-                        <Link
-                            href="/signup"
-                            className="font-medium text-[#fe6b46] hover:text-[#e55a35]"
-                        >
-                            Sign Up Now
-                        </Link>
-                    </p>
-                </div>
-                <form className="mt-8 space-y-6" action="#" method="POST">
+                <h1 className="">Login First before using our ai</h1>
+
+                <form className="mt-8 space-y-6" onSubmit={handleSignIn}>
                     <div className="space-y-4">
                         <div>
-                            <Label htmlFor="email" className="block text-sm font-medium text-gray-900">
-                                Email
-                            </Label>
-                            <div className="mt-1">
-                                <Input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    placeholder="nuhamahsan@gmail.com"
-                                    className="block w-full"
-                                />
-                            </div>
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                                id="email"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Enter your email"
+                                required
+                            />
                         </div>
 
                         <div>
-                            <Label htmlFor="password" className="block text-sm font-medium text-gray-900">
-                                Password
-                            </Label>
-                            <div className="relative mt-1">
+                            <Label htmlFor="password">Password</Label>
+                            <div className="relative">
                                 <Input
                                     id="password"
-                                    name="password"
                                     type={showPassword ? "text" : "password"}
-                                    autoComplete="current-password"
-                                    required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Enter your password"
-                                    className="block w-full pr-10"
+                                    required
+                                    className="pr-10"
                                 />
                                 <button
                                     type="button"
                                     onClick={togglePasswordVisibility}
-                                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-500"
+                                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400"
                                 >
-                                    {showPassword ? (
-                                        <EyeOff className="h-5 w-5" aria-hidden="true" />
-                                    ) : (
-                                        <Eye className="h-5 w-5" aria-hidden="true" />
-                                    )}
+                                    {showPassword ? <EyeOff /> : <Eye />}
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                            <Checkbox id="remember-me" />
-                            <Label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                                Remember me
-                            </Label>
-                        </div>
+                    <Button
+                        type="submit"
+                        className="w-full bg-[#fca547] text-black hover:bg-[#fb923c]"
+                        disabled={loading}
+                    >
+                        {loading ? "Logging in..." : "Login Now"}
+                    </Button>
 
-                        <div className="text-sm">
-                            <a href="#" className="font-medium text-[#0056b3] hover:text-[#004494]">
-                                Forgot Password?
-                            </a>
-                        </div>
+                    {/* Divider */}
+                    <div className="flex items-center my-2">
+                        <hr className="flex-1 border-gray-300" />
+                        <span className="px-2 text-gray-400 text-sm">or</span>
+                        <hr className="flex-1 border-gray-300" />
                     </div>
 
-                    <div className="space-y-4">
-                        <Button
-                            type="submit"
-                            className="w-full bg-[#fca547] text-black hover:bg-[#fb923c] font-semibold"
-                        >
-                            Login Now
-                        </Button>
-
+                    {/* Google Sign-In using Clerk */}
+                    <SignInButton mode="modal">
                         <Button
                             type="button"
                             variant="outline"
@@ -127,7 +129,7 @@ export default function SignInPage() {
                             </svg>
                             Login with Google
                         </Button>
-                    </div>
+                    </SignInButton>
                 </form>
             </div>
         </div>
