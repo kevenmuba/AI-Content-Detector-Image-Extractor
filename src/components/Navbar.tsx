@@ -47,9 +47,11 @@ export default function Navbar() {
                         <Moon className="h-5 w-5" />
                         <span className="sr-only">Toggle theme</span>
                     </Button> */}
-                    <Button variant="orange" className="rounded-full px-6">
-                        Sign In
-                    </Button>
+                    <Link href="/signin">
+                        <Button variant="orange" className="rounded-full px-6">
+                            Sign In
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* Mobile Menu Toggle */}
@@ -76,13 +78,15 @@ export default function Navbar() {
                             <Link href="/#contact" className="hover:text-[#fe6b46] transition-colors" onClick={() => setIsOpen(false)}>Contact</Link>
                             <Link href="http://mubarek-beta.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-[#fe6b46] transition-colors" onClick={() => setIsOpen(false)}>About</Link>
                             <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
-                                <Button variant="ghost" size="icon" className="text-gray-600">
+                                {/* <Button variant="ghost" size="icon" className="text-gray-600">
                                     <Moon className="h-5 w-5" />
                                     <span className="sr-only">Toggle theme</span>
-                                </Button>
-                                <Button variant="orange" className="w-full rounded-full">
-                                    Sign In
-                                </Button>
+                                </Button> */}
+                                <Link href="/signin" onClick={() => setIsOpen(false)}>
+                                    <Button variant="orange" className="w-full rounded-full">
+                                        Sign In
+                                    </Button>
+                                </Link>
                             </div>
                         </div>
                     </motion.div>

@@ -50,29 +50,15 @@ export default function CTA() {
             {/* LEFT */}
             <div className="space-y-6">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white">
-                Ready to secure your <br />
-                <span className="text-[#fe6b46]">content?</span>
-              </h2>
+  Ready to get in touch with the <br />
+  <span className="text-[#fe6b46]">Developer?</span>
+</h2>
 
-              <p className="text-gray-400 md:text-xl leading-relaxed max-w-[500px]">
-                Join over 5,000+ companies using NextDetectAI to verify content and extract value from data.
-              </p>
+<div className="text-sm font-medium text-white flex items-center gap-2">
+  <Users className="h-4 w-4 text-[#fe6b46]" />
+  Contact me with any ideas
+</div>
 
-              <div className="flex items-center gap-4 pt-4">
-                <div className="flex -space-x-3">
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={i}
-                      className="w-10 h-10 rounded-full border-2 border-[#1e1e2e] bg-gray-300"
-                    />
-                  ))}
-                </div>
-
-                <div className="text-sm font-medium text-white flex items-center gap-2">
-                  <Users className="h-4 w-4 text-[#fe6b46]" />
-                  Trusted by leading enterprises
-                </div>
-              </div>
             </div>
 
             {/* RIGHT / FORM */}
