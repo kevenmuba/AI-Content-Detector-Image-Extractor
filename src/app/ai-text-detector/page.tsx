@@ -16,6 +16,8 @@ import {
 export default function AITextDetector() {
   const [text, setText] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState("");
   const maxLength = 25000;
 
   const { isLoaded, isSignedIn } = useUser();
@@ -24,7 +26,6 @@ export default function AITextDetector() {
   // 🔐 FORCE LOGIN
   useEffect(() => {
     if (!isLoaded) return;
-
     if (!isSignedIn) {
       router.replace("/signin");
     }
@@ -34,6 +35,36 @@ export default function AITextDetector() {
   if (!isLoaded || !isSignedIn) {
     return null;
   }
+
+  // 🚀 ANALYZE FUNCTION
+  const handleAnalyze = async () => {
+    try {
+      setIsAnalyzing(true);
+      setError("");
+      setResult(null);
+
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to analyze text");
+      }
+
+      const data = await res.json();
+      setResult(data);
+
+    } catch (err: any) {
+      console.error(err);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#fafafa] pt-24 pb-12">
@@ -46,8 +77,7 @@ export default function AITextDetector() {
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-gray-500 md:text-lg">
             Advanced AI detection for academic integrity, professional writing,
-            and SEO content. Identify GPT-4, Claude, and Gemini generated text
-            with high precision.
+            and SEO content.
           </p>
         </div>
 
@@ -68,6 +98,7 @@ export default function AITextDetector() {
                     <FileText className="h-4 w-4" />
                     Paste Text
                   </Button>
+
                   <Button
                     variant="ghost"
                     size="sm"
@@ -88,7 +119,7 @@ export default function AITextDetector() {
               <div className="flex-1 p-6">
                 <textarea
                   className="w-full h-full resize-none border-none focus:ring-0 p-0 text-gray-700 placeholder:text-gray-300 text-lg leading-relaxed bg-transparent font-light"
-                  placeholder="Start typing or paste your content here to check for AI generation..."
+                  placeholder="Start typing or paste your content here..."
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   maxLength={maxLength}
@@ -102,7 +133,10 @@ export default function AITextDetector() {
                     variant="ghost"
                     size="icon"
                     className="text-gray-400 hover:text-red-500"
-                    onClick={() => setText("")}
+                    onClick={() => {
+                      setText("");
+                      setResult(null);
+                    }}
                     disabled={!text}
                   >
                     <Trash2 className="h-5 w-5" />
@@ -123,7 +157,7 @@ export default function AITextDetector() {
                   size="lg"
                   className="bg-[#fe6b46] hover:bg-[#e05a38] text-white rounded-full px-8 font-bold shadow-lg shadow-orange-500/20 gap-2"
                   disabled={!text || isAnalyzing}
-                  onClick={() => setIsAnalyzing(true)}
+                  onClick={handleAnalyze}
                 >
                   {isAnalyzing ? "Analyzing..." : "Analyze Text"}
                   <BarChart3 className="h-4 w-4" />
@@ -136,23 +170,52 @@ export default function AITextDetector() {
           <div className="lg:col-span-5">
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 h-[600px] flex items-center justify-center p-8 text-center relative overflow-hidden">
 
-              {/* Background glow */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2" />
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-50 rounded-full blur-3xl opacity-50 translate-y-1/2 -translate-x-1/2" />
 
-              <div className="relative z-10 max-w-xs">
-                <div className="w-20 h-20 bg-gray-50 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-inner">
-                  <BarChart3 className="h-10 w-10 text-gray-300" />
-                </div>
-                <h3 className="text-xl font-bold text-[#1e1e2e] mb-2">
-                  Ready to Scan
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  Enter your text and click “Analyze” to see AI probability,
-                  tone insights, and more.
-                </p>
-              </div>
+              <div className="relative z-10 w-full">
 
+                {isAnalyzing && (
+                  <h3 className="text-xl font-semibold text-gray-500">
+                    Analyzing...
+                  </h3>
+                )}
+
+                {error && (
+                  <p className="text-red-500">{error}</p>
+                )}
+
+                {result && !isAnalyzing && (
+                  <div>
+                    <h3 className="text-2xl font-bold text-[#1e1e2e] mb-4">
+                      AI Probability: {result.ai_probability}%
+                    </h3>
+
+                    <p className="text-gray-500 mb-2">
+                      Human Probability: {result.human_probability}%
+                    </p>
+
+                    <p className="text-sm text-gray-400 mt-4 leading-relaxed">
+                      {result.reason}
+                    </p>
+                  </div>
+                )}
+
+                {!result && !isAnalyzing && !error && (
+                  <div>
+                    <div className="w-20 h-20 bg-gray-50 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-inner">
+                      <BarChart3 className="h-10 w-10 text-gray-300" />
+                    </div>
+                    <h3 className="text-xl font-bold text-[#1e1e2e] mb-2">
+                      Ready to Scan
+                    </h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">
+                      Enter your text and click “Analyze” to see AI probability.
+                    </p>
+                  </div>
+                )}
+
+              </div>
             </div>
           </div>
 
