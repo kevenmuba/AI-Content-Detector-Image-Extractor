@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 
@@ -12,6 +12,7 @@ import {
   FileText,
   BarChart3,
   Sparkles,
+  CheckCircle,
 } from "lucide-react";
 
 export default function AITextDetector() {
@@ -20,7 +21,10 @@ export default function AITextDetector() {
   const [isHumanizing, setIsHumanizing] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState("");
+  const [isHumanizedSuccess, setIsHumanizedSuccess] = useState(false);
+
   const maxLength = 25000;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { isLoaded, isSignedIn } = useUser();
   const router = useRouter();
@@ -28,12 +32,51 @@ export default function AITextDetector() {
   // 🔐 FORCE LOGIN
   useEffect(() => {
     if (!isLoaded) return;
-    if (!isSignedIn) {
-      router.replace("/signin");
-    }
+    if (!isSignedIn) router.replace("/signin");
   }, [isLoaded, isSignedIn, router]);
 
   if (!isLoaded || !isSignedIn) return null;
+
+  // ===============================
+  // 📋 PASTE FUNCTION
+  // ===============================
+  const handlePaste = async () => {
+    try {
+      const clipboardText = await navigator.clipboard.readText();
+      setText(clipboardText);
+    } catch {
+      setError("Failed to read clipboard.");
+    }
+  };
+
+  // ===============================
+  // 📄 FILE UPLOAD FUNCTION
+  // ===============================
+  const handleFileUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const fileType = file.name.split(".").pop()?.toLowerCase();
+
+    if (fileType === "txt") {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setText(reader.result as string);
+      };
+      reader.readAsText(file);
+    }
+
+    if (fileType === "docx") {
+      const mammoth = await import("mammoth");
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      setText(result.value);
+    }
+
+    e.target.value = "";
+  };
 
   // ===============================
   // 🚀 ANALYZE FUNCTION
@@ -43,21 +86,19 @@ export default function AITextDetector() {
       setIsAnalyzing(true);
       setError("");
       setResult(null);
+      setIsHumanizedSuccess(false);
 
       const res = await fetch("/api/analyze", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
       });
 
-      if (!res.ok) throw new Error("Failed to analyze text");
+      if (!res.ok) throw new Error();
 
       const data = await res.json();
       setResult(data);
-    } catch (err: any) {
-      console.error(err);
+    } catch {
       setError("Something went wrong. Please try again.");
     } finally {
       setIsAnalyzing(false);
@@ -74,22 +115,23 @@ export default function AITextDetector() {
 
       const res = await fetch("/api/analyze?mode=humanize", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
       });
 
-      if (!res.ok) throw new Error("Failed to humanize text");
+      if (!res.ok) throw new Error();
 
       const data = await res.json();
 
       if (data?.humanized_text) {
         setText(data.humanized_text);
-        setResult(null); // reset result after rewrite
+        setResult(null);
+        setIsHumanizedSuccess(true);
+
+        // remove green effect after 4s
+        setTimeout(() => setIsHumanizedSuccess(false), 4000);
       }
-    } catch (err: any) {
-      console.error(err);
+    } catch {
       setError("Failed to humanize text.");
     } finally {
       setIsHumanizing(false);
@@ -115,14 +157,22 @@ export default function AITextDetector() {
 
           {/* LEFT COLUMN */}
           <div className="lg:col-span-7 space-y-4">
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-[600px]">
+            <div
+              className={`bg-white rounded-3xl shadow-sm border transition-all duration-500 
+              ${isHumanizedSuccess
+                  ? "border-green-500 shadow-green-200 shadow-lg"
+                  : "border-gray-100"
+                } overflow-hidden flex flex-col h-[600px]`}
+            >
 
               {/* Toolbar */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-white">
                 <div className="flex items-center gap-2">
+
                   <Button
                     variant="ghost"
                     size="sm"
+                    onClick={handlePaste}
                     className="bg-orange-50 text-[#fe6b46] hover:bg-orange-100 gap-2 font-medium"
                   >
                     <FileText className="h-4 w-4" />
@@ -132,21 +182,29 @@ export default function AITextDetector() {
                   <Button
                     variant="ghost"
                     size="sm"
+                    onClick={() => fileInputRef.current?.click()}
                     className="text-gray-500 hover:text-[#1e1e2e] gap-2"
                   >
                     <Upload className="h-4 w-4" />
                     Upload Document
                   </Button>
+
+                  <input
+                    type="file"
+                    accept=".txt,.docx"
+                    ref={fileInputRef}
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
                 </div>
 
                 <div className="text-xs font-medium text-gray-400">
-                  Characters: {text.length.toLocaleString()} /{" "}
-                  {maxLength.toLocaleString()}
+                  {text.length.toLocaleString()} / {maxLength.toLocaleString()}
                 </div>
               </div>
 
               {/* Text Area */}
-              <div className="flex-1 p-6">
+              <div className="flex-1 p-6 relative">
                 <textarea
                   className="w-full h-full resize-none border-none focus:ring-0 p-0 text-gray-700 placeholder:text-gray-300 text-lg leading-relaxed bg-transparent font-light"
                   placeholder="Start typing or paste your content here..."
@@ -154,6 +212,15 @@ export default function AITextDetector() {
                   onChange={(e) => setText(e.target.value)}
                   maxLength={maxLength}
                 />
+
+                {isHumanizedSuccess && (
+                  <div className="absolute top-4 right-4 flex items-center gap-2 text-green-600 animate-bounce">
+                    <CheckCircle className="h-5 w-5" />
+                    <span className="text-sm font-medium">
+                      Humanized Successfully!
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Footer */}
@@ -162,30 +229,29 @@ export default function AITextDetector() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-gray-400 hover:text-red-500"
                     onClick={() => {
                       setText("");
                       setResult(null);
+                      setIsHumanizedSuccess(false);
                     }}
                     disabled={!text}
                   >
-                    <Trash2 className="h-5 w-5" />
+                    <Trash2 className="h-5 w-5 text-gray-400 hover:text-red-500" />
                   </Button>
 
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-gray-400 hover:text-[#1e1e2e]"
                     onClick={() => navigator.clipboard.writeText(text)}
                     disabled={!text}
                   >
-                    <Copy className="h-5 w-5" />
+                    <Copy className="h-5 w-5 text-gray-400 hover:text-black" />
                   </Button>
                 </div>
 
                 <Button
                   size="lg"
-                  className="bg-[#fe6b46] hover:bg-[#e05a38] text-white rounded-full px-8 font-bold shadow-lg shadow-orange-500/20 gap-2"
+                  className="bg-[#fe6b46] hover:bg-[#e05a38] text-white rounded-full px-8 font-bold gap-2"
                   disabled={!text || isAnalyzing}
                   onClick={handleAnalyze}
                 >
@@ -198,61 +264,55 @@ export default function AITextDetector() {
 
           {/* RIGHT COLUMN */}
           <div className="lg:col-span-5">
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 h-[600px] flex items-center justify-center p-8 text-center relative overflow-hidden">
+            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 h-[600px] flex items-center justify-center p-8 text-center">
 
-              <div className="relative z-10 w-full">
+              {isAnalyzing && (
+                <h3 className="text-xl font-semibold text-gray-500">
+                  Analyzing...
+                </h3>
+              )}
 
-                {isAnalyzing && (
-                  <h3 className="text-xl font-semibold text-gray-500">
-                    Analyzing...
+              {error && <p className="text-red-500">{error}</p>}
+
+              {result && !isAnalyzing && (
+                <div>
+                  <h3 className="text-2xl font-bold mb-4">
+                    AI Probability: {result.ai_probability}%
                   </h3>
-                )}
 
-                {error && <p className="text-red-500">{error}</p>}
+                  <p className="text-gray-500 mb-2">
+                    Human Probability: {result.human_probability}%
+                  </p>
 
-                {result && !isAnalyzing && (
-                  <div>
-                    <h3 className="text-2xl font-bold text-[#1e1e2e] mb-4">
-                      AI Probability: {result.ai_probability}%
-                    </h3>
+                  <p className="text-sm text-gray-400 mt-4 leading-relaxed">
+                    {result.reason}
+                  </p>
 
-                    <p className="text-gray-500 mb-2">
-                      Human Probability: {result.human_probability}%
-                    </p>
+                  {result.ai_probability > 50 && (
+                    <Button
+                      onClick={handleHumanize}
+                      disabled={isHumanizing}
+                      className="mt-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 gap-2"
+                    >
+                      {isHumanizing ? "Humanizing..." : "Humanize Text"}
+                      <Sparkles className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              )}
 
-                    <p className="text-sm text-gray-400 mt-4 leading-relaxed">
-                      {result.reason}
-                    </p>
+              {!result && !isAnalyzing && !error && (
+                <div>
+                  <BarChart3 className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                  <h3 className="text-xl font-bold mb-2">
+                    Ready to Scan
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Enter your text and click “Analyze”.
+                  </p>
+                </div>
+              )}
 
-                    {/* ✨ Show Humanize Button if AI > 50 */}
-                    {result.ai_probability > 50 && (
-                      <Button
-                        onClick={handleHumanize}
-                        disabled={isHumanizing}
-                        className="mt-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 gap-2"
-                      >
-                        {isHumanizing ? "Humanizing..." : "Humanize Text"}
-                        <Sparkles className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                )}
-
-                {!result && !isAnalyzing && !error && (
-                  <div>
-                    <div className="w-20 h-20 bg-gray-50 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-inner">
-                      <BarChart3 className="h-10 w-10 text-gray-300" />
-                    </div>
-                    <h3 className="text-xl font-bold text-[#1e1e2e] mb-2">
-                      Ready to Scan
-                    </h3>
-                    <p className="text-gray-400 text-sm leading-relaxed">
-                      Enter your text and click “Analyze” to see AI probability.
-                    </p>
-                  </div>
-                )}
-
-              </div>
             </div>
           </div>
 
