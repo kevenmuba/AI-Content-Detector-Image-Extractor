@@ -11,11 +11,13 @@ import {
   Upload,
   FileText,
   BarChart3,
+  Sparkles,
 } from "lucide-react";
 
 export default function AITextDetector() {
   const [text, setText] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isHumanizing, setIsHumanizing] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState("");
   const maxLength = 25000;
@@ -31,12 +33,11 @@ export default function AITextDetector() {
     }
   }, [isLoaded, isSignedIn, router]);
 
-  // 🛑 Prevent UI flicker
-  if (!isLoaded || !isSignedIn) {
-    return null;
-  }
+  if (!isLoaded || !isSignedIn) return null;
 
+  // ===============================
   // 🚀 ANALYZE FUNCTION
+  // ===============================
   const handleAnalyze = async () => {
     try {
       setIsAnalyzing(true);
@@ -51,18 +52,47 @@ export default function AITextDetector() {
         body: JSON.stringify({ text }),
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to analyze text");
-      }
+      if (!res.ok) throw new Error("Failed to analyze text");
 
       const data = await res.json();
       setResult(data);
-
     } catch (err: any) {
       console.error(err);
       setError("Something went wrong. Please try again.");
     } finally {
       setIsAnalyzing(false);
+    }
+  };
+
+  // ===============================
+  // ✨ HUMANIZE FUNCTION
+  // ===============================
+  const handleHumanize = async () => {
+    try {
+      setIsHumanizing(true);
+      setError("");
+
+      const res = await fetch("/api/analyze?mode=humanize", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!res.ok) throw new Error("Failed to humanize text");
+
+      const data = await res.json();
+
+      if (data?.humanized_text) {
+        setText(data.humanized_text);
+        setResult(null); // reset result after rewrite
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError("Failed to humanize text.");
+    } finally {
+      setIsHumanizing(false);
     }
   };
 
@@ -170,9 +200,6 @@ export default function AITextDetector() {
           <div className="lg:col-span-5">
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 h-[600px] flex items-center justify-center p-8 text-center relative overflow-hidden">
 
-              <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2" />
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-50 rounded-full blur-3xl opacity-50 translate-y-1/2 -translate-x-1/2" />
-
               <div className="relative z-10 w-full">
 
                 {isAnalyzing && (
@@ -181,9 +208,7 @@ export default function AITextDetector() {
                   </h3>
                 )}
 
-                {error && (
-                  <p className="text-red-500">{error}</p>
-                )}
+                {error && <p className="text-red-500">{error}</p>}
 
                 {result && !isAnalyzing && (
                   <div>
@@ -198,6 +223,18 @@ export default function AITextDetector() {
                     <p className="text-sm text-gray-400 mt-4 leading-relaxed">
                       {result.reason}
                     </p>
+
+                    {/* ✨ Show Humanize Button if AI > 50 */}
+                    {result.ai_probability > 50 && (
+                      <Button
+                        onClick={handleHumanize}
+                        disabled={isHumanizing}
+                        className="mt-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 gap-2"
+                      >
+                        {isHumanizing ? "Humanizing..." : "Humanize Text"}
+                        <Sparkles className="h-4 w-4" />
+                      </Button>
+                    )}
                   </div>
                 )}
 
