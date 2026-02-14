@@ -22,9 +22,7 @@ export default function Hero() {
                                 <span className="text-[#fe6b46]">Content Authenticity</span>
                             </h1>
                             <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400 leading-relaxed">
-                                Advanced AI models to detect synthetically generated text and extract
-                                high-fidelity images from raw data. Secure your integrity in an
-                                AI-driven world.
+                                Advanced AI models to detect synthetically generated text. Secure your integrity in an AI-driven world.
                             </p>
                         </div>
                         <div className="flex flex-col gap-4 sm:flex-row">

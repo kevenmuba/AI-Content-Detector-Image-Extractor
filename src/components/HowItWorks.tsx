@@ -18,6 +18,11 @@ const steps = [
         title: "Instant Verification",
         description: "Get a comprehensive report with authenticity scores and highlighted areas of concern.",
     },
+        {
+        number: "4",
+        title: "Humanize Content",
+        description: "Transform detected AI text into natural, human-like writing that bypasses detection while preserving your original meaning.",
+    },
 ];
 
 export default function HowItWorks() {
@@ -27,7 +32,7 @@ export default function HowItWorks() {
                 <div className="grid gap-12 lg:grid-cols-2 items-center">
                     <div>
                         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-[#1e1e2e] mb-12">
-                            Simple as 1, 2, 3.
+                            Complete <span className="text-[#fe6b46]">Authenticity</span> Workflow
                         </h2>
                         <div className="space-y-8">
                             {steps.map((step, index) => (
@@ -86,15 +91,6 @@ export default function HowItWorks() {
                                 </div>
                             </div>
 
-                            {/* Extraction Mock */}
-                            <div className="space-y-3 pt-2">
-                                <p className="text-xs uppercase tracking-wider text-gray-400 font-bold">Extracted Assets</p>
-                                <div className="grid grid-cols-3 gap-3">
-                                    {[1, 2, 3].map((i) => (
-                                        <div key={i} className="aspect-square bg-gray-200 rounded-lg animate-pulse" />
-                                    ))}
-                                </div>
-                            </div>
                         </div>
                     </motion.div>
                 </div>

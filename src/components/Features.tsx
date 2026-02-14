@@ -14,14 +14,6 @@ const features = [
         link: "/ai-text-detector",
         benefits: ["Sentence-level analysis", "Plagiarism cross-referencing"],
     },
-    {
-        title: "Image Extractor",
-        description: "Convert textual descriptions or embedded data back into high-quality visual assets using our proprietary extraction engine.",
-        icon: ImageIcon,
-        color: "bg-blue-50 text-blue-500",
-        link: "/image-extractor",
-        benefits: ["Vector & Raster extraction", "Batch processing API"],
-    },
 ];
 
 export default function Features() {

@@ -34,9 +34,8 @@ export default function Navbar() {
                     <span className="text-[#1e1e2e]">NextDetect<span className="text-[#fe6b46]">AI</span></span>
                 </Link>
 
-                {/* Desktop Menu */}
                 <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
-                    <Link href="/#features" className="hover:text-[#fe6b46] transition-colors">Products</Link>
+                    <Link href="/ai-text-detector" className="hover:text-[#fe6b46] transition-colors">AI Detector</Link>
                     <Link href="/#how-it-works" className="hover:text-[#fe6b46] transition-colors">How it Works</Link>
                     <Link href="/#contact" className="hover:text-[#fe6b46] transition-colors">Contact</Link>
                     <Link href="http://mubarek-beta.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-[#fe6b46] transition-colors">About</Link>
@@ -73,7 +72,7 @@ export default function Navbar() {
                         className="md:hidden border-t border-gray-100 bg-white"
                     >
                         <div className="flex flex-col gap-4 p-4 text-sm font-medium text-gray-600">
-                            <Link href="/#features" className="hover:text-[#fe6b46] transition-colors" onClick={() => setIsOpen(false)}>Products</Link>
+                            <Link href="/ai-text-detector" className="hover:text-[#fe6b46] transition-colors" onClick={() => setIsOpen(false)}>AI Detector</Link>
                             <Link href="/#how-it-works" className="hover:text-[#fe6b46] transition-colors" onClick={() => setIsOpen(false)}>How it Works</Link>
                             <Link href="/#contact" className="hover:text-[#fe6b46] transition-colors" onClick={() => setIsOpen(false)}>Contact</Link>
                             <Link href="http://mubarek-beta.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-[#fe6b46] transition-colors" onClick={() => setIsOpen(false)}>About</Link>

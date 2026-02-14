@@ -39,7 +39,6 @@ export default function Footer() {
                         <h4 className="font-bold text-[#1e1e2e]">Product</h4>
                         <ul className="space-y-2 text-sm text-gray-500">
                             <li><Link href="/ai-text-detector" className="hover:text-[#fe6b46] transition-colors">Text Detector</Link></li>
-                            <li><Link href="/image-extractor" className="hover:text-[#fe6b46] transition-colors">Image Extractor</Link></li>
                         </ul>
                     </div>
 
